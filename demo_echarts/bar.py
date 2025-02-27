@@ -1,3 +1,4 @@
+import pandas as pd
 from streamlit_echarts import JsCode
 from streamlit_echarts import st_echarts
 
@@ -12,6 +13,44 @@ def render_basic_bar():
         "series": [{"data": [120, 200, 150, 80, 70, 110, 130], "type": "bar"}],
     }
     st_echarts(options=options, height="500px")
+
+
+def render_iris_bar_chart():
+    """Create a bar chart for average feature values per species"""
+
+    # Load dataset
+    iris = pd.read_csv("data/Iris.csv")
+
+    # Compute mean values per species
+    mean_values = iris.groupby("Species").mean()
+
+    # Features to plot
+    features = ["SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm"]
+
+    # Prepare data for bar chart
+    series_data = [
+        {"name": feature, "type": "bar", "data": mean_values[feature].tolist()}
+        for feature in features
+    ]
+
+    # ECharts option
+    option = {
+        "title": {"text": "Average Feature Values Per Species"},
+        "tooltip": {"trigger": "axis"},
+        "legend": {
+            "data": features,
+            "top": "10%",
+        },
+        "xAxis": {
+            "type": "category",
+            "data": mean_values.index.tolist(),  # Species names
+        },
+        "yAxis": {"type": "value", "name": "cm"},
+        "series": series_data,
+    }
+
+    # Render the bar chart
+    st_echarts(option, height="400px")
 
 
 def render_set_style_of_single_bar():
@@ -161,6 +200,10 @@ def render_stacked_horizontal_bar():
 ST_BAR_DEMOS = {
     "Bar: Basic bar": (
         render_basic_bar,
+        "https://echarts.apache.org/examples/en/editor.html?c=bar-simple",
+    ),
+    "Bar: Iris bar chart": (
+        render_iris_bar_chart,
         "https://echarts.apache.org/examples/en/editor.html?c=bar-simple",
     ),
     "Bar: Set Style Of Single Bar": (

@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 from streamlit_echarts import st_echarts
 from streamlit_echarts import JsCode
 
@@ -13,8 +14,74 @@ def render_basic_line_chart():
         "series": [{"data": [820, 932, 901, 934, 1290, 1330, 1320], "type": "line"}],
     }
     st_echarts(
-        options=option, height="400px",
+        options=option,
+        height="400px",
     )
+
+
+# def render_line_chart_from_csv():
+#     """_summary_"""
+#     iris = pd.read_csv("./data/iris.csv")
+
+#     option = {
+#         "xAxis": {
+#             "type": "category",
+#             "data": iris["SepalLengthCm"].tolist(),
+#         },
+#         "yAxis": {"type": "value"},
+#         "series": [{"data": iris["SepalLengthCm"].tolist(), "type": "line"}],
+#     }
+#     st_echarts(
+#         options=option,
+#         height="400px",
+#     )
+
+
+def render_line_chart_from_csv():
+    """Render a line chart showing average feature values across species."""
+
+    # Load dataset
+    iris = pd.read_csv("./data/iris.csv")
+
+    # Compute mean values for each species
+    mean_values = iris.groupby("Species").mean()
+
+    # Prepare data for the chart
+    option = {
+        "xAxis": {
+            "type": "category",
+            "data": mean_values.index.tolist(),  # Species names as X-axis labels
+        },
+        "yAxis": {"type": "value"},
+        "legend": {
+            "data": ["Sepal Length", "Sepal Width", "Petal Length", "Petal Width"]
+        },
+        "series": [
+            {
+                "name": "Sepal Length",
+                "data": mean_values["SepalLengthCm"].tolist(),
+                "type": "line",
+            },
+            {
+                "name": "Sepal Width",
+                "data": mean_values["SepalWidthCm"].tolist(),
+                "type": "line",
+            },
+            {
+                "name": "Petal Length",
+                "data": mean_values["PetalLengthCm"].tolist(),
+                "type": "line",
+            },
+            {
+                "name": "Petal Width",
+                "data": mean_values["PetalWidthCm"].tolist(),
+                "type": "line",
+            },
+        ],
+    }
+
+    # Render the line chart
+    st_echarts(options=option, height="400px")
 
 
 def render_basic_area_chart():
@@ -40,7 +107,9 @@ def render_stacked_line_chart():
     options = {
         "title": {"text": "折线图堆叠"},
         "tooltip": {"trigger": "axis"},
-        "legend": {"data": ["邮件营销", "联盟广告", "视频广告", "直接访问", "搜索引擎"]},
+        "legend": {
+            "data": ["邮件营销", "联盟广告", "视频广告", "直接访问", "搜索引擎"]
+        },
         "grid": {"left": "3%", "right": "4%", "bottom": "3%", "containLabel": True},
         "toolbox": {"feature": {"saveAsImage": {}}},
         "xAxis": {
@@ -92,7 +161,9 @@ def render_stacked_area_chart():
             "trigger": "axis",
             "axisPointer": {"type": "cross", "label": {"backgroundColor": "#6a7985"}},
         },
-        "legend": {"data": ["邮件营销", "联盟广告", "视频广告", "直接访问", "搜索引擎"]},
+        "legend": {
+            "data": ["邮件营销", "联盟广告", "视频广告", "直接访问", "搜索引擎"]
+        },
         "toolbox": {"feature": {"saveAsImage": {}}},
         "grid": {"left": "3%", "right": "4%", "bottom": "3%", "containLabel": True},
         "xAxis": [
@@ -222,6 +293,10 @@ def render_line_race():
 ST_LINE_DEMOS = {
     "Line: Basic Line Chart": (
         render_basic_line_chart,
+        "https://echarts.apache.org/examples/en/editor.html?c=line-simple",
+    ),
+    "Line: Iris Line Chart": (
+        render_line_chart_from_csv,
         "https://echarts.apache.org/examples/en/editor.html?c=line-simple",
     ),
     "Line: Basic Area Chart": (

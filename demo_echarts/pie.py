@@ -1,23 +1,32 @@
 from streamlit_echarts import st_echarts
 
+data = [
+    {"value": 1048, "name": "搜索引擎"},
+    {"value": 735, "name": "直接访问"},
+    {"value": 580, "name": "邮件营销"},
+    {"value": 484, "name": "联盟广告"},
+    {"value": 300, "name": "视频广告"},
+]
+
 
 def render_pie_simple():
     options = {
-        "title": {"text": "某站点用户访问来源", "subtext": "纯属虚构", "left": "center"},
+        "title": {
+            "text": "某站点用户访问来源",
+            "subtext": "纯属虚构",
+            "left": "center",
+        },
         "tooltip": {"trigger": "item"},
-        "legend": {"orient": "vertical", "left": "left",},
+        "legend": {
+            "orient": "vertical",
+            "left": "left",
+        },
         "series": [
             {
                 "name": "访问来源",
                 "type": "pie",
                 "radius": "50%",
-                "data": [
-                    {"value": 1048, "name": "搜索引擎"},
-                    {"value": 735, "name": "直接访问"},
-                    {"value": 580, "name": "邮件营销"},
-                    {"value": 484, "name": "联盟广告"},
-                    {"value": 300, "name": "视频广告"},
-                ],
+                "data": data,
                 "emphasis": {
                     "itemStyle": {
                         "shadowBlur": 10,
@@ -29,7 +38,8 @@ def render_pie_simple():
         ],
     }
     st_echarts(
-        options=options, height="600px",
+        options=options,
+        height="600px",
     )
 
 
@@ -64,7 +74,8 @@ def render_pie_donutradius():
         ],
     }
     st_echarts(
-        options=options, height="500px",
+        options=options,
+        height="500px",
     )
 
 
@@ -102,7 +113,8 @@ def render_nightingale_rose_diagram():
         ],
     }
     st_echarts(
-        options=option, height="600px",
+        options=option,
+        height="600px",
     )
 
 
